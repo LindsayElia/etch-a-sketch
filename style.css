@@ -1,0 +1,49 @@
+@import url(http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700);
+
+/* not sure what this is doing but it stops the canvas from resizing with the window! */
+html, body {
+    margin: 0;
+    overflow: hidden;
+    height: 100%;
+}
+
+body {
+	font-family: 'Source Sans Pro', sans-serif;
+	background-color: #ece2e3;	/* light pinkish */
+}
+
+#container {
+	border: 2px solid black;
+	background-color: #CA0A13;	/* red */
+	padding: 10px;
+	margin: 10px;
+	position: absolute;
+	top: 10px;
+	left: 20px;
+	width: 880px;
+	height: 600px;
+}
+
+#container h1 {
+	margin: 550px 38%;
+}
+
+#canvasTop {
+	padding: 0;
+	background-color: #CA0A13;	/* red */
+	position: absolute;
+	margin: 80px 33px ;
+    width: 90%;
+    height: 50%;
+}
+
+#canvasBottom {
+	padding: 0;
+	background-color: #CA0A13;	/* red */
+/*	position: absolute;	*/
+	margin: 400px 0 0 -3px;
+	border: 2px solid black;
+    width: 100%;
+    height: 33%;
+}
+
