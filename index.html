@@ -1,22 +1,39 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
 
-
 <html>
 <head>
 
-
+<title>Etch-A-Sketch by Lindsay Elia</title>
+<link href="../style.css" rel="stylesheet">
 
 </head>
 <body>
 
+<div id="container">
 
-<canvas id="myCanvas" resize></canvas>
+<canvas id="canvasTop" resize="false"></canvas>
+<canvas id="canvasBottom" resize="false"></canvas>
 
+<!--
+I removed width and height from the canvas element here and definied them
+inside of my .js file
+width="200px" height="100px"
+
+I don't think resize="false" is doing anything?
+-->
+
+<h1>Etch A Sketch</h1>
+</div>
+
+
+
+
+<script type="text/javascript"  src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
 
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/paper.js/0.9.22/paper-full.js"></script>
 
-<script type="text/paperscript" src="script.js" canvas="myCanvas"></script>
+<script type="text/javascript" src="drawing-script.js"></script>
 
 </body>
 </html>
