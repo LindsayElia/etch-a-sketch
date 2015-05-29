@@ -1,4 +1,5 @@
 @import url(http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700);
+@import url(http://fonts.googleapis.com/css?family=Cabin+Sketch:400,700);
 
 /* not sure what this is doing but it stops the canvas from resizing with the window! */
 html, body {
@@ -8,7 +9,7 @@ html, body {
 }
 
 body {
-	font-family: 'Source Sans Pro', sans-serif;
+	font-family: 'Cabin Sketch', cursive;
 	background-color: #ece2e3;	/* light pinkish */
 }
 
@@ -22,28 +23,47 @@ body {
 	left: 20px;
 	width: 880px;
 	height: 600px;
+	border-top-left-radius: 20px;
+	border-top-right-radius: 20px;
+	border-bottom-right-radius: 20px;
+	border-bottom-left-radius: 20px;
 }
 
-#container h1 {
-	margin: 550px 38%;
+h1 {
+	font-family: 'Cabin Sketch', cursive;
+	color: #E1BF5C;	/* light yellow */
+	/* light pinkish - set it to be the same color as the body so we don't see it. Some text is needed to get the custom font to load in paper.js. */
+	font-size: 4.5em;
+	margin: 0 0 0 18%;
+	padding: 0;
+/*	float: left; */
 }
 
 #canvasTop {
 	padding: 0;
 	background-color: #CA0A13;	/* red */
 	position: absolute;
-	margin: 80px 33px ;
-    width: 90%;
-    height: 50%;
+	margin: 12px 0 0 -2px;
+    width: 98%;
+    height: 82%;
+/*	border: 2px solid yellow;	*/
 }
 
+/*
 #canvasBottom {
 	padding: 0;
-	background-color: #CA0A13;	/* red */
-/*	position: absolute;	*/
-	margin: 400px 0 0 -3px;
+	background-color: #CA0A13;	/* red 
+	margin: 420px 0 0 -2px;
 	border: 2px solid black;
     width: 100%;
-    height: 33%;
+    height: 18%;
 }
+*/
+
+#soundHolder {
+	display: none;
+	padding: 5px;
+	margin: 680px 0 0 0;
+}
+
 

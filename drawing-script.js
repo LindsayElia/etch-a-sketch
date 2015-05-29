@@ -4,59 +4,83 @@ paper.install(window);
 //run the program after the window has loaded
 window.onload = function() {
 	
-	// call the first paper.js canvas
-	loadDrawingSpace();
-	// call the second paper.js canvas
-	loadButtonSpace();
-
-
-function loadDrawingSpace(){
+	//test that jQuery is loaded
+	//var backDiv = $('#container');
+	//backDiv.css("backgroundColor", "blue");
 	
 	//show something in the console just to check
 	console.log("window is loaded");
-	console.log("drawing canvas is loaded");		
-		
-		// make the canvas
-		paper.setup('canvasTop');		
-
-/*
-		// testing out to see what the properties give us
-		console.log("pixel ratio: " + view.pixelRatio);	// read only
-		console.log("element: " + view.element);		// read only
-		console.log("resolution: " + view.resolution);	// read only
-		console.log("viewSize: " + view.viewSize);
-		console.log("bounds: " + view.bounds);		// read only
-		console.log("size: " + view.size);			// read only
-		console.log("center: " + view.center);		
-		console.log("zoom: " + view.zoom);			
-*/
-		
-		// change the size of our view - width, height
-		// view.viewSize = new Size(400, 100);			
-		// console.log("viewSize: " + view.viewSize);
-		// I'm doing this with CSS now
-
-		// make a rectangle with rounded corners approximately the same size as our #canvasTop
-		var wrapperRectangle = new Rectangle(new Point(1, 1), new Point(808, 308));
-		var wrapperCornerSize = new Size(10, 10);
-		var pathWrapperRectangle = new Path.RoundRectangle(wrapperRectangle, wrapperCornerSize);
-		pathWrapperRectangle.fillColor = '#C8C8C8';
-		pathWrapperRectangle.strokeColor = 'black';
-		pathWrapperRectangle.strokeWidth = 2;
-
-		// we need to create a tool to talk to each event handler we create
-		// we want to keep this as a global variable
-		var toolK = new Tool();	
+	console.log("drawing canvas is loaded");
 	
-		// the pathK is the line that will be drawn by the user
-		var pathK = new Path();
-		pathK.strokeColor = '#3D3D3D';
-		pathK.strokeJoin = "round";	// change the look of the end points when the line changes direction
-		//pathK.opacity = 0.75;	// make the line transparent
+	// declare our global variables
+	var pathWR;	// gray rectangle
+	var group;
+	var path;
+	var groupsArray;
+	var pathsArray;
+	var counter;
+	var toolK = new Tool(); // we need to create a tool to talk to each event handler we create
+							// we want to keep this as a global variable
+	var startingPoint = new Point(150, 350); // The starting position of the line
+	var step = 2; // The amount we will move when one of the keys is pressed is 2 by default
 
-		pathK.strokeWidth = 2;		// set the width of the line to 1 by default
-		console.log("path stroke: " + pathK.strokeWidth);
-/* TURN THIS BACK ON LATER TO PROMPT USER OR ADD A BUTTON
+	// make the canvas
+	paper.setup('canvasTop');
+
+/* TESTING THINGS OUT
+	// testing out to see what the properties give us
+	console.log("pixel ratio: " + view.pixelRatio);	// read only
+	console.log("element: " + view.element);		// read only
+	console.log("resolution: " + view.resolution);	// read only
+	console.log("viewSize: " + view.viewSize);
+	console.log("bounds: " + view.bounds);		// read only
+	console.log("size: " + view.size);			// read only
+	console.log("center: " + view.center);		
+	console.log("zoom: " + view.zoom);			
+*/
+
+// BACKGROUND GRAY RECTANGLE WITH ROUNDED CORNERS
+	// make a rectangle with rounded corners approximately the same size as our #canvasTop
+	var wrapperRectPoints = new Rectangle(new Point(75, 1), new Point(808, 400));
+	var wrapperRectSize = new Size(10, 10);
+	wrapperRectangle = new Path.RoundRectangle(wrapperRectPoints, wrapperRectSize);
+	wrapperRectangle.fillColor = '#C8C8C8';  // light gray
+	wrapperRectangle.strokeColor = 'black';
+	wrapperRectangle.strokeWidth = 2;		
+
+
+	counter = 0;
+	groupsArray = [];
+	pathsArray = [];
+	
+	function makeNewGroups(){	
+		for (var i = 0; i < 100; i++){
+			// Create an empty group:
+			group = new Group();
+			// add the group into our groupsArray
+			groupsArray.push(group)
+		}
+	} // close makeNewGroup
+	makeNewGroups();
+	console.log(groupsArray);
+	
+	function makeNewPaths(){
+		for (var j = 0; j < 100; j++){
+			// Create an empty group:
+			path = new Path({
+				strokeColor: '#3D3D3D',	// some sort of "lighter" black color
+				strokeJoin: "round", 	// round corners when line changes direction
+				strokeWidth: 2,
+			});
+			// add the group into our groupsArray
+			pathsArray.push(path)
+		}
+		return pathsArray;
+	} // close makeNewGroup
+	makeNewPaths();
+	console.log(pathsArray);
+	
+/* TURN THIS BACK ON LATER?? TO PROMPT USER OR ADD A BUTTON
 		// let the user choose the width of the line
 		function getUserStrokeWidth(userStrokeWidth){
 			userStrokeWidth = prompt("How wide would you like your line to be? Give me a number between 1 and 8.");
@@ -65,119 +89,182 @@ function loadDrawingSpace(){
 		getUserStrokeWidth();
 		console.log("path stroke: " + pathK.strokeWidth);
 */
-		
 
-		var step = 5;	// The amount we will move when one of the keys is pressed is 2 by default
-		console.log("step: " + step);
-/* not working...line goes huge!	
-		// let the user choose the length of the steps that the path jumps each time a key is pressed
-		function getUserStepLength(userStepLength){
-			userStepLength = prompt("How far would you like your line to move each time you press a key? Give me a number between 1 and 5.");
-			step = userStepLength;
-		}
-		getUserStepLength();
-		console.log("step: " + step);
-*/
+// KEY DOWN EVENTS -- MAKE THE LINE THE USER DRAWS
+	function makeNewLine() {
 		
-		// The starting position of the line
-		var position = new Point(10, 300);	//x or width, y or vertical
-		// we tell it to start at the Point we specified above
-		pathK.add(position);	
-
-/* I don't think this makes a difference? I also set resize to false in the HTML. Not sure.
-		// use onResize to get the item to stay in a specified position 
-		// if the window is resized
-		
-		//tell canvas? to stay in center of window when window is resized
-		toolK.onResize = function(event) {
-			// Whenever the window is resized, recenter the path:
-			pathK.position = (10, 10);
-			console.log("window resized");
-		}
-*/	
-		
-
+		// set current path to the starting position
+		pathsArray[counter].add(startingPoint);
+	
 		toolK.onKeyDown = function(event) {
-			if(event.key == 'z') {
-				position.x -= step;
-			}
-
-			if(event.key == 'x') {
-				position.x += step;
-			}
-
-			if(event.key == 'up') {
-				event.preventDefault();  //turn off default behavior for arrow keys
-				position.y -= step;
-			}
-
-			if(event.key == 'down') {
-				event.preventDefault();
-				position.y += step;
-			}
-			pathK.add(position);
+			
+				if (wrapperRectangle.bounds.contains(startingPoint) && event.key == 'left') {
+					event.preventDefault(); //turn off default behavior for arrow keys
+					console.log("key 'left' pressed");
+					startingPoint.x -= step;
+					// MOVE THE DASHED LINES INSIDE OF THE LEFT WHEEL	
+					pathCR.rotate(-1);
+					pathTinyR.rotate(-1);
+				}
+				
+				if (wrapperRectangle.bounds.contains(startingPoint) && event.key == 'right') {
+					console.log("key 'right' pressed");
+					startingPoint.x += step;
+					pathCR.rotate(1);
+					pathTinyR.rotate(1);
+				}
+				
+				if (wrapperRectangle.bounds.contains(startingPoint) && event.key == 'up') {
+					event.preventDefault();
+					console.log("key 'up' pressed");
+					startingPoint.y -= step;
+					pathCL.rotate(-1);
+					pathTinyL.rotate(-1);
+				}
+				
+				if (wrapperRectangle.bounds.contains(startingPoint) && event.key == 'down') {
+					event.preventDefault();
+					console.log("key 'down' pressed");
+					startingPoint.y += step;
+					pathCL.rotate(1);
+					pathTinyL.rotate(1);
+				}
+				
+				pathsArray[counter].add(startingPoint);	// add the new locations to the path		
+				
+		}	// close onKeyDown()
 		
-			if(event.key == 'space'){
-				//pathK.remove();			//remove the drawing
-				pathK.visible = false;
+		
+	} // close makeNewLine
+			
+
+// MOUSE OVER EVENT - PLAIN JAVASCRIPT - ACTIVATES THE KEYDOWN EVENTS
+	var divFun = document.getElementById("canvasTop");
+	divFun.onmouseover = function(event){
+		console.log("mouse over");
+			makeNewLine();
+	}	// close onmouseover()
+		
+	
+// MAKE THE WHEELS
+	var circleLeftBack = new Path.Circle(new Point(50, 458), 50);
+	circleLeftBack.fillColor = 'black';
+	circleLeftBack.opacity = 0.5; // make the line transparent
+
+	var circleLeftFront = new Path.Circle(new Point(50, 458), 45);
+	circleLeftFront.fillColor = '#F0EEF1'; // off-white color
+
+	var circleRightBack = circleLeftBack.clone();
+	circleRightBack.position.x = 834;
+
+	var circleRightFront = circleLeftFront.clone();
+	circleRightFront.position.x = 834;
+
+// MAKE THE DASHED LINES INSIDE OF THE WHEELS
+	var pathCL = new Path.Circle({
+		center: [50, 458],		// same y coord as the circles
+		radius: 40,
+		strokeWidth: 2,
+		strokeColor: 'black',
+		dashArray: [20, 4], // Set the dashed stroke to [10pt dash, 4pt gap]:
+	});
+
+	var pathCR = pathCL.clone();
+	pathCR.position.x = 834;
+	
+	var pathTinyL = new Path();
+	pathTinyL.strokeColor = 'black';
+	pathTinyL.add(new Point(45, 453));
+	pathTinyL.add(new Point(55, 463));
+	
+	var pathTinyR = new Path();
+	pathTinyR.strokeColor = 'black';
+	pathTinyR.add(new Point(839, 453));
+	pathTinyR.add(new Point(829, 463));
+
+
+// MAKE BUTTON RECTANGLES
+	// make a rectangle with rounded corners for the CLEAR button
+	// is on the right side of the page
+	var clearButton = new Rectangle(new Point(650, 430), new Point(720, 490));
+	var clearButtonCornerSize = new Size(5, 5);
+	var pathCB = new Path.RoundRectangle(clearButton, clearButtonCornerSize);
+	pathCB.fillColor = '#E1BF5C';	// light yellow
+	pathCB.strokeColor = 'black';
+	pathCB.strokeWidth = 2;
+	
+	// Create text inside the CLEAR button
+	var text1 = new PointText(new Point(656,454));
+	text1.fillColor = 'black';
+	text1.content = 'Click Me';
+	text1.fontFamily = 'Cabin Sketch';
+	text1.fontSize = '1em';
+	
+	var text2 = text1.clone();
+	text2.position.y = 470;
+	text2.fillColor = 'black';
+	text2.content = 'to Erase';
+
+	// make a rectangle with rounded corners for the START button
+	// is on the left side of the page
+	var pathSB = pathCB.clone();
+	pathSB.fillColor = '#C8C8C8';  // light gray
+	pathSB.position = new Point(200, 460);
+	
+	// Create text inside the START button
+	var text3 = text1.clone();
+	text3.position.x = 199;
+	
+	var text4 = text2.clone();
+	text4.position.x = 201;
+	text4.content = 'to Start';
+
+	var text5 = text1.clone();
+	text5.position.x = 380;
+	text5.content = 'Use arrow keys to move.';
+	text5.fillColor = '#F0EEF1'; // off-white color
+	
+	// sign my name!
+	var text6 = text5.clone();
+	text6.position.x = 455;
+	text6.position.y = 470;
+	text6.content = 'created by Lindsay Elia';
+	text6.fontSize = '.85em';
+
+
+// MAKE MOUSE DOWN EVENTS FOR THE BUTTONS TO CLEAR AND START THE DRAWINGS
+	toolK.onMouseDown = function(event) {
+		if (pathCB.bounds.contains(event.point)){
+			console.log("clear button clicked");
+			
+			
+			groupsArray[counter].visible = false;
+		
+			document.getElementById('sound').play()
+			if (counter === 0){
+				pathsArray[counter].position.x -= 1;
+				pathsArray[counter].position.y -= 1;
 			}
 		}
-
 		
-		view.draw(); // needed to make the drawing go faster
-		
-//	} 	// close the "with paper" setup
-}		// close the window.onload function
-
-
-
-function loadButtonSpace(){
-	//show something in the console just to check
-	console.log("window is loaded");
-	console.log("buttons canvas is loaded");			
-		
-		// make the canvas
-		paper.setup('canvasBottom');		
-
-/* ANIMATION TO TEST
-		var pathG = new Path.Rectangle(new Point(50, 50), new Size(100, 50));
-		pathG.style = {
-			fillColor: 'white',
-			strokeColor: 'black'
-		};
-
-		// Create a copy of the path and set its stroke color to red:
-		var copyMe = pathG.clone();
-		copyMe.strokeColor = 'red';
-
-		// Need to include view. before onFrame since we are using JavaScript
-		view.onFrame = function() {
-			// Each frame, rotate the copy by 1 degree:
-			copyMe.rotate(1);
+		if (pathSB.bounds.contains(event.point)){
+			console.log("start button clicked");
+			counter = counter + 1;
+			// Add the paths to one of the group items in the groupsArray
+			groupsArray[counter].addChild(pathsArray[counter]);
+			console.log(groupsArray[counter]);
+			// show a piece of the line to the user
+				pathsArray[counter].add(startingPoint);
+				pathsArray[counter].position.x += 1;
+				pathsArray[counter].position.y += 1;
+				pathsArray[counter].add(startingPoint);
 		}
-*/		
-
-		var circleLeftBack = new Path.Circle(new Point(50, 152), 50);
-		circleLeftBack.fillColor = 'black';
-		circleLeftBack.opacity = 0.5;	// make the line transparent
-				
-		var circleLeftFront = new Path.Circle(new Point(50, 152), 46);
-		circleLeftFront.fillColor = 'white';
-				
-		var circleRightBack = circleLeftBack.clone();
-		circleRightBack.position.x = 834;
+	}
 		
-		var circleRightFront = circleLeftFront.clone();
-		circleRightFront.position.x = 834;
-		
-		
-		view.draw(); // needed to make the drawing go faster
-		
-//	} 	// close the "with paper" setup
-}		// close the window.onload function
+	
+	
 
-}
+// TELL OUR CANVAS TO DRAW RIGHT AWAY				
+	view.draw(); // needed to make the drawing go faster
 
-
-
-
+} // close the window.onload() function
