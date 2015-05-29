@@ -97,44 +97,43 @@ window.onload = function() {
 		pathsArray[counter].add(startingPoint);
 	
 		toolK.onKeyDown = function(event) {
+							
+			if (event.key == 'left') {
+				event.preventDefault(); //turn off default behavior for arrow keys
+				console.log("key 'left' pressed");
+				startingPoint.x -= step;
+				// MOVE THE DASHED LINES INSIDE OF THE LEFT WHEEL	
+				pathCR.rotate(-1);
+				pathTinyR.rotate(-1);
+			}
 			
-				if (wrapperRectangle.bounds.contains(startingPoint) && event.key == 'left') {
-					event.preventDefault(); //turn off default behavior for arrow keys
-					console.log("key 'left' pressed");
-					startingPoint.x -= step;
-					// MOVE THE DASHED LINES INSIDE OF THE LEFT WHEEL	
-					pathCR.rotate(-1);
-					pathTinyR.rotate(-1);
-				}
-				
-				if (wrapperRectangle.bounds.contains(startingPoint) && event.key == 'right') {
-					console.log("key 'right' pressed");
-					startingPoint.x += step;
-					pathCR.rotate(1);
-					pathTinyR.rotate(1);
-				}
-				
-				if (wrapperRectangle.bounds.contains(startingPoint) && event.key == 'up') {
-					event.preventDefault();
-					console.log("key 'up' pressed");
-					startingPoint.y -= step;
-					pathCL.rotate(-1);
-					pathTinyL.rotate(-1);
-				}
-				
-				if (wrapperRectangle.bounds.contains(startingPoint) && event.key == 'down') {
-					event.preventDefault();
-					console.log("key 'down' pressed");
-					startingPoint.y += step;
-					pathCL.rotate(1);
-					pathTinyL.rotate(1);
-				}
-				
-				pathsArray[counter].add(startingPoint);	// add the new locations to the path		
-				
-		}	// close onKeyDown()
-		
-		
+			if (event.key == 'right') {
+				console.log("key 'right' pressed");
+				startingPoint.x += step;
+				pathCR.rotate(1);
+				pathTinyR.rotate(1);
+			}
+			
+			if (event.key == 'up') {
+				event.preventDefault();
+				console.log("key 'up' pressed");
+				startingPoint.y -= step;
+				pathCL.rotate(-1);
+				pathTinyL.rotate(-1);
+			}
+			
+			if (event.key == 'down') {
+				event.preventDefault();
+				console.log("key 'down' pressed");
+				startingPoint.y += step;
+				pathCL.rotate(1);
+				pathTinyL.rotate(1);
+			}
+							
+			// add the new locations to the path
+			pathsArray[counter].add(startingPoint);	
+			
+		}	// close toolK.onKeyDown()
 	} // close makeNewLine
 			
 
@@ -236,11 +235,19 @@ window.onload = function() {
 	toolK.onMouseDown = function(event) {
 		if (pathCB.bounds.contains(event.point)){
 			console.log("clear button clicked");
+		
+		//	this works to rasterize, but not disapper
+		//	var raster = groupsArray[counter].rasterize();
+		//	raster.scale(5);
 			
-			
+			//hide the line we've drawn so far
 			groupsArray[counter].visible = false;
 		
+			// play the "erasing" sound
 			document.getElementById('sound').play()
+			
+			// if 'erase' is clicked before anything else is done on the canvas,
+			// hide the "start" mark
 			if (counter === 0){
 				pathsArray[counter].position.x -= 1;
 				pathsArray[counter].position.y -= 1;
@@ -254,10 +261,10 @@ window.onload = function() {
 			groupsArray[counter].addChild(pathsArray[counter]);
 			console.log(groupsArray[counter]);
 			// show a piece of the line to the user
-				pathsArray[counter].add(startingPoint);
-				pathsArray[counter].position.x += 1;
-				pathsArray[counter].position.y += 1;
-				pathsArray[counter].add(startingPoint);
+			pathsArray[counter].add(startingPoint);
+			pathsArray[counter].position.x += 1;
+			pathsArray[counter].position.y += 1;
+			pathsArray[counter].add(startingPoint);
 		}
 	}
 		
