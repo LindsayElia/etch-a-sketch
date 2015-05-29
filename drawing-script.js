@@ -46,7 +46,7 @@ window.onload = function() {
 	wrapperRectangle = new Path.RoundRectangle(wrapperRectPoints, wrapperRectSize);
 	wrapperRectangle.fillColor = '#C8C8C8';  // light gray
 	wrapperRectangle.strokeColor = 'black';
-	wrapperRectangle.strokeWidth = 2;		
+	wrapperRectangle.strokeWidth = 3;		
 
 
 	counter = 0;
@@ -165,7 +165,7 @@ window.onload = function() {
 		radius: 40,
 		strokeWidth: 2,
 		strokeColor: 'black',
-		dashArray: [20, 4], // Set the dashed stroke to [10pt dash, 4pt gap]:
+		dashArray: [10, 4], // Set the dashed stroke to [10pt dash, 4pt gap]:
 	});
 
 	var pathCR = pathCL.clone();

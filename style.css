@@ -14,7 +14,7 @@ body {
 }
 
 #container {
-	border: 2px solid black;
+	border: 4px solid #3D3D3D;	/* some sort of "lighter" black color */
 	background-color: #CA0A13;	/* red */
 	padding: 10px;
 	margin: 10px;
