@@ -219,16 +219,17 @@ window.onload = function() {
 	text4.content = 'to Start';
 
 	var text5 = text1.clone();
-	text5.position.x = 380;
+	text5.position.x = 370;
 	text5.content = 'Use arrow keys to move.';
 	text5.fillColor = '#F0EEF1'; // off-white color
+	text5.fontSize = '1.3em';
 	
 	// sign my name!
 	var text6 = text5.clone();
-	text6.position.x = 455;
-	text6.position.y = 470;
+	text6.position.x = 485;
+	text6.position.y = 475;
 	text6.content = 'created by Lindsay Elia';
-	text6.fontSize = '.85em';
+	text6.fontSize = '1em';
 
 
 // MAKE MOUSE DOWN EVENTS FOR THE BUTTONS TO CLEAR AND START THE DRAWINGS
