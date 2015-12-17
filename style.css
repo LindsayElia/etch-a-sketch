@@ -14,7 +14,7 @@ body {
 }
 
 #container {
-	border: 4px solid #3D3D3D;	/* some sort of "lighter" black color */
+	border: 4px solid #3D3D3D;	/* lighter black color */
 	background-color: #CA0A13;	/* red */
 	padding: 10px;
 	margin: 10px;
@@ -46,7 +46,7 @@ h1 {
 	margin: 12px 0 0 -2px;
     width: 98%;
     height: 82%;
-	/*border: 2px solid yellow;*/
+	border: 2px solid #CA0A13;	/* red */
 }
 
 /*
